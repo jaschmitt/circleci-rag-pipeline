@@ -15,6 +15,23 @@ def thing():
     thing = True
     return thing
 
+@pytest.fixture
+def chain():
+    # Load environment (API keys)
+    load_dotenv()
+
+    # Define chain
+    template = """You are a helpful assistant who's name is Bob."""
+    human_template = "{text}"
+
+    chat_prompt = ChatPromptTemplate.from_messages([
+        ("system", template),
+        ("human", human_template),
+    ])
+    chain = chat_prompt | ChatOpenAI(model="gpt-3.5-turbo-16k", temperature=0) | StrOutputParser()
+
+    return chain
+
 
 # ============================================= #
 
@@ -28,19 +45,7 @@ def test_hello_world(thing):
     assert thing == True
 
 
-def test_get_response_from_llm():
-    load_dotenv()
-
-    # Define chain
-    template = """You are a helpful assistant who's name is Bob."""
-    human_template = "{text}"
-
-    chat_prompt = ChatPromptTemplate.from_messages([
-        ("system", template),
-        ("human", human_template),
-    ])
-    chain = chat_prompt | ChatOpenAI(model="gpt-3.5-turbo-16k", temperature=0) | StrOutputParser()
-
+def test_get_response_from_llm(chain):
     # Define input/output
     input_text  = "What is your name?"
     output_text = chain.invoke({"text": input_text})
