@@ -19,6 +19,8 @@ def thing():
 # ============================================= #
 
 
+
+
 # =================== TESTS =================== #
 
 def test_hello_world(thing):
@@ -29,6 +31,7 @@ def test_hello_world(thing):
 def test_get_response_from_llm():
     load_dotenv()
 
+    # Define chain
     template = """You are a helpful assistant who's name is Bob."""
     human_template = "{text}"
 
@@ -37,37 +40,13 @@ def test_get_response_from_llm():
         ("human", human_template),
     ])
     chain = chat_prompt | ChatOpenAI(model="gpt-3.5-turbo-16k", temperature=0) | StrOutputParser()
-    chain.invoke({"text": "What is your name?"})
+
+    # Define input/output
+    input_text  = "What is your name?"
+    output_text = chain.invoke({"text": input_text})
+    print("Question: " + input_text)
+    print("Answer:   " + output_text)
+    
+    assert "bob" in output_text.lower()
 
 
-#def test_get_response_from_llm_2():
-#    # load environment which contains API keys
-#    load_dotenv()
-#
-#
-#    # define test name
-#    test_name = "Bob"
-#
-#
-#    # Create message to feed LLM
-#    template = ChatPromptTemplate.from_messages([
-#        ("system", "You are a helpful AI bot. Your name is {name}."),
-#        ("human",  "Hello, how are you doing?"),
-#        ("ai",     "I'm doing well, thanks!"),
-#        ("human",  "{user_input}"),
-#    ])
-#    prompt = template.format_messages(
-#        name=test_name,
-#    )
-#
-#
-#    model = ChatOpenAI(model="gpt-3.5-turbo-16k", temperature=0)
-#    response_generator = (
-#        prompt
-#        | model
-#        | StrOutputParser()
-#    )
-#
-#    chain.invoke({"user_input": "What is your name?"})
-#
-#
