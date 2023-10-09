@@ -10,3 +10,4 @@ python-dotenv
 lxml
 html2text
 tiktoken
+bs4
