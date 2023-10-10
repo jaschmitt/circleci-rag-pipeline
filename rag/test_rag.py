@@ -1,6 +1,6 @@
 # LangSmith libs
-from langchain.smith   import RunEvalConfig, run_on_dataset
-from langsmith import Client
+from langchain.smith import RunEvalConfig, run_on_dataset
+from langsmith       import Client
 
 # other libs
 import pytest
@@ -42,7 +42,7 @@ def test_name(chain_1):
 
     # Define input/output
     input_text  = "What is your name?"
-    output_text = chain_1.invoke({"text": input_text})
+    output_text = chain_1.invoke({"question": input_text})
     print("Question: " + input_text)
     print("Answer:   " + output_text)
     
@@ -57,7 +57,7 @@ def test_basic_arithmetic(chain_1):
 
     # Define input/output
     input_text  = "What is 5 + 7?"
-    output_text = chain_1.invoke({"text": input_text})
+    output_text = chain_1.invoke({"question": input_text})
     print("Question: " + input_text)
     print("Answer:   " + output_text)
     

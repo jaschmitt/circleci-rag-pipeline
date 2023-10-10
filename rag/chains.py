@@ -24,7 +24,7 @@ class assistant_chain:
 
         # Define chain_1
         template        = "You are a helpful assistant who's name is %s." % name
-        human_template  = "{text}"
+        human_template  = "{question}"
 
         chat_prompt = ChatPromptTemplate.from_messages([
             ("system", template),
