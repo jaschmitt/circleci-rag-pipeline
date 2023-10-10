@@ -1,24 +1,14 @@
-# LangChain libraries
-from langchain.document_loaders       import RecursiveUrlLoader
-from langchain.document_transformers  import Html2TextTransformer
-from langchain.text_splitter          import TokenTextSplitter
-from langchain.embeddings             import OpenAIEmbeddings
-from langchain.vectorstores           import Chroma
-from langchain.prompts                import ChatPromptTemplate
-from langchain.chat_models            import ChatOpenAI
-from langchain.schema.output_parser   import StrOutputParser
-from langchain.smith                  import RunEvalConfig, run_on_dataset
-
-# LangSmith libraries
+# LangSmith libs
+from langchain.smith   import RunEvalConfig, run_on_dataset
 from langsmith import Client
 
-# Other libraries
-from   datetime import datetime
-from   dotenv   import load_dotenv
+# other libs
 import pytest
 import uuid
-from   operator import itemgetter
-import os
+
+# custom libs
+import chains
+
 
 
 
@@ -26,80 +16,16 @@ import os
 
 @pytest.fixture
 def chain_1():
-    # Load environment (API keys)
-    load_dotenv()
+    chain = chains.assistant_chain("Bob")
 
-    # Define chain_1
-    template = """You are a helpful assistant who's name is Bob."""
-    human_template = "{text}"
-
-    chat_prompt = ChatPromptTemplate.from_messages([
-        ("system", template),
-        ("human", human_template),
-    ])
-    chain_1 = chat_prompt | ChatOpenAI(model="gpt-3.5-turbo-16k", temperature=0) | StrOutputParser()
-
-    return chain_1
+    return chain.getChain()
 
 
 @pytest.fixture
 def chain_2():
-    # Load environment (API keys)
-    load_dotenv()
+    chain = chains.documentation_chain("https://docs.smith.langchain.com")
 
-    # Load in langsmith documentation as test
-    api_loader      = RecursiveUrlLoader("https://docs.smith.langchain.com")
-    raw_documents   = api_loader.load()
-
-    # Transformer
-    doc_transformer = Html2TextTransformer()
-    transformed     = doc_transformer.transform_documents(raw_documents)
-
-    # Splitter
-    text_splitter  = TokenTextSplitter(
-        model_name="gpt-3.5-turbo",
-        chunk_size=2000,
-        chunk_overlap=200,
-    )
-    documents  = text_splitter.split_documents(transformed)
-
-
-    # Define vector store based on documents
-    embeddings   = OpenAIEmbeddings()
-    vectorstore  = Chroma.from_documents(documents, embeddings)
-    retriever    = vectorstore.as_retriever(search_kwargs={"k": 4})
-
-    # Define chain_2
-    prompt = ChatPromptTemplate.from_messages(
-            [
-                ("system", "You are a helpful documentation Q&A assistant, trained to answer"
-                " questions from LangSmith's documentation."
-                " LangChain is a framework for building applications using large language models."
-                "\nThe current time is {time}.\n\nRelevant documents will be retrieved in the following messages."),
-                ("system", "{context}"),
-                ("human","{question}")
-            ]
-        ).partial(time=str(datetime.now()))
-
-    model = ChatOpenAI(model="gpt-3.5-turbo-16k", temperature=0)
-    response_generator = (
-        prompt
-        | model
-        | StrOutputParser()
-    )
-
-    chain_2 = (
-        # The runnable map here routes the original inputs to a context and a question dictionary to pass to the response generator
-        {
-            "context": itemgetter("question") | retriever | (lambda docs: "\n".join([doc.page_content for doc in docs])),
-            "question": itemgetter("question")
-        }
-        | response_generator
-    )
-    
-    return chain_2
-
-
+    return chain.getChain()
 
 # ============================================= #
 
@@ -108,6 +34,8 @@ def chain_2():
 
 # =================== TESTS =================== #
 
+# This test uses the chain_1 fixture (which is just re-usable code that
+# executes before the test is run)
 def test_name(chain_1):
     # instantiate LangSmith client
     client = Client()
@@ -121,12 +49,14 @@ def test_name(chain_1):
     assert "bob" in output_text.lower()
 
 
+# This test uses the chain_1 fixture (which is just re-usable code that
+# executes before the test is run)
 def test_basic_arithmetic(chain_1):
     # instantiate LangSmith client
     client = Client()
 
     # Define input/output
-    input_text  = "What is your 5 + 7?"
+    input_text  = "What is 5 + 7?"
     output_text = chain_1.invoke({"text": input_text})
     print("Question: " + input_text)
     print("Answer:   " + output_text)
@@ -134,7 +64,9 @@ def test_basic_arithmetic(chain_1):
     assert "12" in output_text.lower()
 
 
-def test_documentation_llm_evaluators(chain_2):
+# This test uses the chain_2 fixture (which is just re-usable code that
+# executes before the test is run)
+def test_llm_evaluators(chain_2):
     # instantiate LangSmith client
     client = Client()
 
@@ -160,6 +92,7 @@ def test_documentation_llm_evaluators(chain_2):
         ("how do i move my project between organizations?", "langsmith doesn't directly support moving projects between organizations.")
     ]
 
+
     # create a dataset for langsmith evaluator using the example qa list from above
     dataset_name = f"retrieval qa questions {str(uuid.uuid4())}"
     dataset = client.create_dataset(dataset_name=dataset_name)
@@ -175,17 +108,12 @@ def test_documentation_llm_evaluators(chain_2):
     )
 
 
-#    # determine project name
-#    project_name = os.environ.get("LANGCHAIN_PROJECT") + "_evaluators"
-
-
     # Run the evaluation. This makes predictions over the dataset and then uses
     # the "QA" evaluator to check the correctness on each data point.
     _ = client.run_on_dataset(
         dataset_name=dataset_name,
         llm_or_chain_factory=lambda: chain_2,
         evaluation=eval_config,
-#        project_name=project_name,
     )
 
 
