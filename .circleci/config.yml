@@ -45,7 +45,7 @@ jobs:
       - create-env     
       - enter-venv
       - run:
-          command: source ./venv/bin/activate && python ./rag/test_rag.py
+          command: source ./venv/bin/activate && pytest -s
           name: Test rag unit tests
 
 # Invoke jobs via workflows
