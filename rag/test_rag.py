@@ -16,7 +16,7 @@ import chains
 
 @pytest.fixture
 def chain_1():
-    chain = chains.assistant_chain("Jim")
+    chain = chains.assistant_chain("Bob")
 
     return chain.getChain()
 

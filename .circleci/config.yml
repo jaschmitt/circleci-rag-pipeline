@@ -6,15 +6,15 @@ commands:
   check-python:
     steps:
       - run:
-          command: python3 --version
+          command: source ./venv/bin/activate && python3 --version
           name: Check Python version
       - run:
-          command: pip3 --version
+          command: source ./venv/bin/activate && pip3 --version
           name: Check Pip version
-  enter-venv:
+  install-venv:
     steps:
       - run:
-          command: source ./tools/enter-venv.sh
+          command: source ./tools/install-venv.sh
           name: Enter virtual env and install dependencies
 
 
@@ -28,7 +28,7 @@ jobs:
       image: ubuntu-2204:2023.07.2
     steps:
       - checkout # Check out the code in the project directory
-      - enter-venv
+      - install-venv
       - check-python # Invoke command "check-python" after entering venv
       - run:
           command: source ./venv/bin/activate && pytest -s
