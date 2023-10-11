@@ -1,0 +1,57 @@
+version: 2.1
+
+# Define custom commands for this config
+# See https://circleci.com/docs/reusing-config/#authoring-reusable-commands
+commands:
+  check-python:
+    steps:
+      - run:
+          command: python3 --version
+          name: Check Python version
+      - run:
+          command: pip3 --version
+          name: Check Pip version
+  create-env:
+    steps:
+      - run:
+          # Environment variables must be configured in a CircleCI project or context
+          command: |
+            cat \<<- EOF > .env
+            OPENAI_API_KEY=$OPENAI_API_KEY
+            LANGCHAIN_API_KEY=$LANGCHAIN_API_KEY
+            LANGCHAIN_TRACING_V2=true
+            LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
+            LANGCHAIN_PROJECT=rag-demo
+            EOF
+          name: Create .env file containing secrets
+  enter-venv:
+    steps:
+      - run:
+          command: source ./tools/enter_venv.sh
+          name: Enter virtual env and install dependencies
+
+
+# Define custom jobs for this config
+# See: https://circleci.com/docs/jobs-steps/
+jobs:
+  run-unit-tests:
+    steps:
+      - checkout # Check out the code in the project directory
+      - check-python # Invoke command "check-python"
+      - create-env     
+      - enter-venv
+      - run:
+          command: source ./venv/bin/activate && python ./rag/test_rag.py
+          name: Test rag unit tests
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/workflows/
+workflows:
+  # This workflow does a full build from scratch and deploys the model
+  integration-tests:
+    jobs:
+      - run-unit-tests:
+          filters:
+            branches:
+              only:
+                - rag_pipeline # Only run the job when the main branch is updated
