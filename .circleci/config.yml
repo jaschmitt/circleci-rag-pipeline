@@ -26,7 +26,6 @@ jobs:
       # for a full list of Linux VM execution environments, see
       # https://circleci.com/developer/images?imageType=machine
       image: ubuntu-2204:2023.07.2
-    context: rag  # contains environment variables
     steps:
       - checkout # Check out the code in the project directory
       - check-python # Invoke command "check-python"
@@ -43,6 +42,7 @@ workflows:
   integration-tests:
     jobs:
       - run-unit-tests:
+          context: rag  # contains environment variables
           filters:
             branches:
               only:
