@@ -11,19 +11,6 @@ commands:
       - run:
           command: pip3 --version
           name: Check Pip version
-  create-env:
-    steps:
-      - run:
-          # Environment variables must be configured in a CircleCI project or context
-          command: |
-            cat \<<- EOF > .env
-            OPENAI_API_KEY=$OPENAI_API_KEY
-            LANGCHAIN_API_KEY=$LANGCHAIN_API_KEY
-            LANGCHAIN_TRACING_V2=true
-            LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
-            LANGCHAIN_PROJECT=rag-demo
-            EOF
-          name: Create .env file containing secrets
   enter-venv:
     steps:
       - run:
@@ -39,6 +26,7 @@ jobs:
       # for a full list of Linux VM execution environments, see
       # https://circleci.com/developer/images?imageType=machine
       image: ubuntu-2204:2023.07.2
+    context: rag  # contains environment variables
     steps:
       - checkout # Check out the code in the project directory
       - check-python # Invoke command "check-python"
