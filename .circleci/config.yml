@@ -28,8 +28,8 @@ jobs:
       image: ubuntu-2204:2023.07.2
     steps:
       - checkout # Check out the code in the project directory
-      - check-python # Invoke command "check-python"
       - enter-venv
+      - check-python # Invoke command "check-python" after entering venv
       - run:
           command: source ./venv/bin/activate && pytest -s
           name: Test rag unit tests
