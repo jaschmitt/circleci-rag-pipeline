@@ -27,9 +27,9 @@ jobs:
       # https://circleci.com/developer/images?imageType=machine
       image: ubuntu-2204:2023.07.2
     steps:
-      - checkout # Check out the code in the project directory
+      - checkout      # Check out the code in the project directory
       - install-venv
-      - check-python # Invoke command "check-python" after entering venv
+      - check-python  # Invoke command "check-python" after entering venv
       - run:
           command: source ./venv/bin/activate && pytest -s
           name: Test rag unit tests
@@ -45,4 +45,4 @@ workflows:
           filters:
             branches:
               only:
-                - rag-pipeline # Only run the job when the main branch is updated
+                - rag-pipeline # Only run the job when this branch is updated
