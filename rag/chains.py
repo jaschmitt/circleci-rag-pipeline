@@ -16,7 +16,6 @@ from operator import itemgetter
 
 
 
-# single change to prompt run
 
 class assistant_chain:
     # Constructor (Initializer) Method

@@ -36,7 +36,9 @@ commands:
 jobs:
   run-unit-tests:
     machine: # executor type
-      image: ubuntu-2204 # # recommended linux image - includes Ubuntu 22.04
+      # for a full list of Linux VM execution environments, see
+      # https://circleci.com/developer/images?imageType=machine
+      image: ubuntu-2204:2023.07.2
     steps:
       - checkout # Check out the code in the project directory
       - check-python # Invoke command "check-python"
