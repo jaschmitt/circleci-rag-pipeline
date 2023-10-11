@@ -56,4 +56,4 @@ workflows:
           filters:
             branches:
               only:
-                - rag_pipeline # Only run the job when the main branch is updated
+                - rag-pipeline # Only run the job when the main branch is updated
