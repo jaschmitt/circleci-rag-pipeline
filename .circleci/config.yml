@@ -35,6 +35,8 @@ commands:
 # See: https://circleci.com/docs/jobs-steps/
 jobs:
   run-unit-tests:
+    machine: # executor type
+      image: ubuntu-2204 # # recommended linux image - includes Ubuntu 22.04
     steps:
       - checkout # Check out the code in the project directory
       - check-python # Invoke command "check-python"
