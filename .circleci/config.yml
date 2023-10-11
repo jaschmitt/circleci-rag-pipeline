@@ -27,7 +27,7 @@ commands:
   enter-venv:
     steps:
       - run:
-          command: source ./tools/enter_venv.sh
+          command: source ./tools/enter-venv.sh
           name: Enter virtual env and install dependencies
 
 
