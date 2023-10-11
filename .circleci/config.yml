@@ -29,7 +29,6 @@ jobs:
     steps:
       - checkout # Check out the code in the project directory
       - check-python # Invoke command "check-python"
-      - create-env     
       - enter-venv
       - run:
           command: source ./venv/bin/activate && pytest -s
