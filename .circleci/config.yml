@@ -33,6 +33,24 @@ jobs:
       - run:
           command: source ./venv/bin/activate && pytest -s
           name: Test rag unit tests
+  run-nightly-tests:
+      - checkout      # Check out the code in the project directory
+      - install-venv
+      - check-python  # Invoke command "check-python" after entering venv
+      - run:
+          command: source ./venv/bin/activate && pytest -s
+          name: Run integration tests
+  deploy:
+    # For running on CircleCI's self-hosted runners
+    machine: true
+    resource_class: bwizard815/sample-project # Update this to reflect your self-hosted runner resource class details
+    steps:
+      - checkout
+      - install-venv
+      - check-python  # Invoke command "check-python" after entering venv
+      - run:
+          command: source ./venv/bin/activate && flask --app app run
+          name: Deploy application on self-hosted runner
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/workflows/
@@ -46,3 +64,19 @@ workflows:
             branches:
               only:
                 - rag-pipeline # Only run the job when this branch is updated
+  deployment-tests:
+      # Trigger on a schedule or when retrain branch is updated
+      triggers:
+        - schedule:
+            cron: "0 0 * * *" # Daily
+      jobs:
+        - run-nightly-tests:
+            context: rag  # contains environment variables
+        - hold: # A job that will require manual approval in the CircleCI web application.
+            requires: 
+              - run-nightly-tests
+            type: approval # This key-value pair will set your workflow to a status of "On Hold"
+        - deploy:
+            requires:
+              - hold
+
