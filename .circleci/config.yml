@@ -54,7 +54,7 @@ jobs:
       - install-venv
       - check-python  # Invoke command "check-python" after entering venv
       - run:
-          command: source ./venv/bin/activate && flask --app rag/app run
+          command: source ./venv/bin/activate && flask --app rag/app run &
           name: Deploy application on self-hosted runner
 
 # Invoke jobs via workflows
