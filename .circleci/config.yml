@@ -43,7 +43,7 @@ jobs:
       - install-venv
       - check-python  # Invoke command "check-python" after entering venv
       - run:
-          command: source ./venv/bin/activate && pytest -s  -k test-name
+          command: source ./venv/bin/activate && pytest -s  -k test_name
           name: Run nightly tests
   deploy:
     # For running on CircleCI's self-hosted runners
