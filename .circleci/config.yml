@@ -78,13 +78,13 @@ workflows:
 #              branches:
 #                only:
 #                  - main
-      filters:
-        branches:
-          only:
-            - main
       jobs:
         - run-nightly-tests:
             context: rag  # contains environment variables
+            filters:
+              branches:
+                only:
+                  - main
         - hold: # A job that will require manual approval in the CircleCI web application.
             requires: 
               - run-nightly-tests
