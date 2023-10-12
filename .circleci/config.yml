@@ -74,6 +74,10 @@ workflows:
       triggers:
         - schedule:
             cron: "0 0 * * *" # Daily
+            filters:
+              branches:
+                only:
+                  - main
       jobs:
         - run-nightly-tests:
             context: rag  # contains environment variables
