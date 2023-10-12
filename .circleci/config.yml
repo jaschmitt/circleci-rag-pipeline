@@ -78,11 +78,10 @@ workflows:
 #              branches:
 #                only:
 #                  - main
-      triggers:
-        filters:
-          branches:
-            only:
-              - main
+      filters:
+        branches:
+          only:
+            - main
       jobs:
         - run-nightly-tests:
             context: rag  # contains environment variables
