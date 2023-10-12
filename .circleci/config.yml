@@ -90,6 +90,7 @@ workflows:
               - run-nightly-tests
             type: approval # This key-value pair will set your workflow to a status of "On Hold"
         - deploy:
+            context: rag  # contains environment variables
             requires:
               - hold
 
