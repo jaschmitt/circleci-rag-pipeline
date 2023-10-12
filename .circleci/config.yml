@@ -34,6 +34,11 @@ jobs:
           command: source ./venv/bin/activate && pytest -s
           name: Test rag unit tests
   run-nightly-tests:
+    machine: # executor type
+      # for a full list of Linux VM execution environments, see
+      # https://circleci.com/developer/images?imageType=machine
+      image: ubuntu-2204:2023.07.2
+    steps:
       - checkout      # Check out the code in the project directory
       - install-venv
       - check-python  # Invoke command "check-python" after entering venv
