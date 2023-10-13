@@ -48,7 +48,7 @@ jobs:
   deploy:
     # For running on CircleCI's self-hosted runners
     machine: true
-    resource_class: bwizard815/sample-project # Update this to reflect your self-hosted runner resource class details
+    resource_class: user/sample-project # TODO add self-hosted runner resource class details
     steps:
       - checkout
       - install-venv
@@ -71,20 +71,16 @@ workflows:
                 - rag-pipeline # Only run the job when this branch is updated
   deployment-tests:
     # Trigger on a schedule or when retrain branch is updated
-#    triggers:
-#      - schedule:
-#          cron: "0 0 * * *" # Daily
-#          filters:
-#            branches:
-#              only:
-#                - main
-    jobs:
-      - run-nightly-tests:
-          context: rag  # contains environment variables
+    triggers:
+      - schedule:
+          cron: "0 0 * * *" # Daily
           filters:
             branches:
               only:
                 - main
+    jobs:
+      - run-nightly-tests:
+          context: rag  # contains environment variables
       - hold: # A job that will require manual approval in the CircleCI web application.
           requires: 
             - run-nightly-tests
