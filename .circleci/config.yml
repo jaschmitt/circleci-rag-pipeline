@@ -71,21 +71,20 @@ workflows:
                 - rag-pipeline # Only run the job when this branch is updated
   deployment-tests:
     # Trigger on a schedule or when retrain branch is updated
-    triggers:
-      - schedule:
+#    triggers:
+#      - schedule:
 #          cron: "0 0 * * *" # Daily
-          cron: "* 13 * * *" # Daily
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - run-nightly-tests:
-          context: rag  # contains environment variables
 #          filters:
 #            branches:
 #              only:
 #                - main
+    jobs:
+      - run-nightly-tests:
+          context: rag  # contains environment variables
+          filters:
+            branches:
+              only:
+                - main
       - hold: # A job that will require manual approval in the CircleCI web application.
           requires: 
             - run-nightly-tests
