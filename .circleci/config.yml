@@ -70,27 +70,28 @@ workflows:
               only:
                 - rag-pipeline # Only run the job when this branch is updated
   deployment-tests:
-      # Trigger on a schedule or when retrain branch is updated
-#      triggers:
-#        - schedule:
-#            cron: "0 0 * * *" # Daily
-#            filters:
-#              branches:
-#                only:
-#                  - main
-      jobs:
-        - run-nightly-tests:
-            context: rag  # contains environment variables
-            filters:
-              branches:
-                only:
-                  - main
-        - hold: # A job that will require manual approval in the CircleCI web application.
-            requires: 
-              - run-nightly-tests
-            type: approval # This key-value pair will set your workflow to a status of "On Hold"
-        - deploy:
-            context: rag  # contains environment variables
-            requires:
-              - hold
+    # Trigger on a schedule or when retrain branch is updated
+    triggers:
+      - schedule:
+#          cron: "0 0 * * *" # Daily
+          cron: "20 13 * * *" # Daily
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - run-nightly-tests:
+          context: rag  # contains environment variables
+#          filters:
+#            branches:
+#              only:
+#                - main
+      - hold: # A job that will require manual approval in the CircleCI web application.
+          requires: 
+            - run-nightly-tests
+          type: approval # This key-value pair will set your workflow to a status of "On Hold"
+      - deploy:
+          context: rag  # contains environment variables
+          requires:
+            - hold
 

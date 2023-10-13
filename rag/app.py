@@ -1,7 +1,5 @@
-
 # custom libs
 import chains
-
 
 # other libs
 from   flask import Flask, jsonify, make_response, request
@@ -9,11 +7,9 @@ import sys
 
 
 
-
 # initialize starter chain
-chain = chains.assistant_chain("Bob").getChain()
-#chain = chains.documentation_chain("https://docs.smith.langchain.com").getChain()
-
+#chain = chains.assistant_chain("Bob").getChain()
+chain = chains.documentation_chain("https://docs.smith.langchain.com").getChain()
 
 
 app = Flask(__name__)
@@ -39,5 +35,4 @@ def chat():
                 {"success": False, 
                  "error": "Unexpected error: failed to send the message"}),
             400)
-
 
