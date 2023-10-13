@@ -75,10 +75,10 @@ workflows:
       - schedule:
 #          cron: "0 0 * * *" # Daily
           cron: "* 13 * * *" # Daily
-          filters:
-            branches:
-              only:
-                - main
+#          filters:
+#            branches:
+#              only:
+#                - main
     jobs:
       - run-nightly-tests:
           context: rag  # contains environment variables
