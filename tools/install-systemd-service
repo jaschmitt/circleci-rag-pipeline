@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # This script installs the systemd user service file
-mkdir -p ~/.config/systemd/user/
-cp ./tools/rag_app.service  ~/.config/systemd/user/
+mkdir -p $HOME/.config/systemd/user/
+cp ./tools/rag_app.service  $HOME/.config/systemd/user/
 
 # Reload daemon so that new service file can take effect
 systemctl --user daemon-reload
