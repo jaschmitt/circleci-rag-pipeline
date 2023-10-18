@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# This script sets up a Python virtual environment and installs the required packages for running the ML workflow scripts in the ml directory
-cp ./tools/rag_app.service  /etc/systemd/system/.
+# This script installs the systemd user service file
+mkdir -p /home/circleci/.config/systemd/user/
+cp ./tools/rag_app.service  /home/circleci/.config/systemd/user/
 
 # Reload daemon so that new service file can take effect
 systemctl daemon-reload

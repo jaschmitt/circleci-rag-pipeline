@@ -4,7 +4,7 @@
 Description=Rag App
 
 [Service]
-User=root
+#User=circleci
 WorkingDirectory=/var/rag_app/
 ExecStart=/bin/bash -c "source /var/rag_app/venv/bin/activate && flask --app rag/app run"
 

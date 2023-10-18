@@ -69,10 +69,7 @@ jobs:
       - check-python  # Invoke command "check-python" after entering venv
       - run:
           command: ./tools/copy-env
-          name: Deploy application to /var directory on localhost
-      - run:
-          command: ./tools/start-server
-          name: Run Flask server
+          name: Deploy application to /var directory on localhost and start server
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/workflows/

@@ -1,35 +1,35 @@
 #!/bin/bash
 
 # Stop the service just in case it's already running
-sudo systemctl stop  rag_app
+systemctl --user stop  rag_app
 
-#
-## Set the directory you want to copy to /var
-#source_dir="$(pwd)"  # Current directory
-#destination_dir="/var/rag_app"
-#
-## Check if the destination directory exists and remove it
-#if [ -d "$destination_dir" ]; then
-#    rm -r "$destination_dir"/*
-#fi
-#
-## Recreate the destination directory
-#mkdir -p "$destination_dir"
-#
-## Copy the contents from the source directory to the destination directory
-#cp -r "$source_dir"/* "$destination_dir"  # This command excludes hidden files
-#
-## Also copy certain hidden files
-#cp "$source_dir"/.env "$destination_dir"/.
-#
-#
-## Verify that it was successfully created
-#if [ -d "$destination_dir" ]; then
-#    echo "Directory copied to /var successfully."
-#    # Then restart the service on success
-#    sudo systemctl start  rag_app
-#    echo "Starting rag_app.service..."
-#else
-#    echo "Failed to copy directory to /var"
-#fi
-#
+
+# Set the directory you want to copy to /var
+source_dir="$(pwd)"  # Current directory
+destination_dir="/var/rag_app"
+
+# Check if the destination directory exists and remove it
+if [ -d "$destination_dir" ]; then
+    rm -r "$destination_dir"/*
+fi
+
+# Recreate the destination directory
+mkdir -p "$destination_dir"
+
+# Copy the contents from the source directory to the destination directory
+cp -r "$source_dir"/* "$destination_dir"  # This command excludes hidden files
+
+# Also copy certain hidden files
+cp "$source_dir"/.env "$destination_dir"/.
+
+
+# Verify that it was successfully created
+if [ -d "$destination_dir" ]; then
+    echo "Directory copied to /var successfully."
+    # Then restart the service on success
+    systemctl --user start  rag_app
+    echo "Starting rag_app.service..."
+else
+    echo "Failed to copy directory to /var"
+fi
+
