@@ -68,6 +68,9 @@ jobs:
       - install-venv
       - check-python  # Invoke command "check-python" after entering venv
       - run:
+          command: printenv
+          name: Print environment
+      - run:
           command: ./tools/install-systemd-service
           name: Install systemd service
       - run:
