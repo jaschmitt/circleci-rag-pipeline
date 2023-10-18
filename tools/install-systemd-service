@@ -2,8 +2,11 @@
 
 # This script installs the systemd user service file
 mkdir -p $HOME/.config/systemd/user/
+echo "1"
 cp ./tools/rag_app.service  $HOME/.config/systemd/user/
+echo "2"
 
 # Reload daemon so that new service file can take effect
 systemctl --user daemon-reload
+echo "3"
 
