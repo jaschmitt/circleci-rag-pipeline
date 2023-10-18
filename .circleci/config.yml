@@ -61,7 +61,7 @@ jobs:
   deploy:
     # For running on CircleCI's self-hosted runners
     machine: true
-    resource_class: user/sample-project # TODO add self-hosted runner resource class details
+    resource_class: bwizard815/sample-project # TODO add self-hosted runner resource class details
     steps:
       - checkout
       - create-env
@@ -96,19 +96,19 @@ workflows:
 #              only:
 #                - main
     jobs:
-      - run-nightly-tests:
+#      - run-nightly-tests:
+#          context: rag  # contains environment variables
+#      - hold: # A job that will require manual approval in the CircleCI web application.
+#          requires: 
+#            - run-nightly-tests
+#          type: approval # This key-value pair will set your workflow to a status of "On Hold"
+      - deploy:
           context: rag  # contains environment variables
           # TODO: this below should go
           filters:
             branches:
               only:
                 - main
-      - hold: # A job that will require manual approval in the CircleCI web application.
-          requires: 
-            - run-nightly-tests
-          type: approval # This key-value pair will set your workflow to a status of "On Hold"
-      - deploy:
-          context: rag  # contains environment variables
-          requires:
-            - hold
+#          requires:
+#            - hold
 
