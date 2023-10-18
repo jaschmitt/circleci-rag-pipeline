@@ -7,6 +7,8 @@ cp ./tools/rag_app.service  $HOME/.config/systemd/user/
 echo "2"
 
 # Reload daemon so that new service file can take effect
-systemctl --user daemon-reload
+systemctl --user start dbus  # Needed for systemctl
 echo "3"
+systemctl --user daemon-reload
+echo "4"
 
