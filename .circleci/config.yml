@@ -11,6 +11,19 @@ commands:
       - run:
           command: source ./venv/bin/activate && pip3 --version
           name: Check Pip version
+  create-env:
+    steps:
+      - run:
+          # Environment variables must be configured in a CircleCI project or context
+          command: |
+            cat \<<- EOF > .env
+            OPENAI_API_KEY=$OPENAI_API_KEY
+            LANGCHAIN_TRACING_V2=$LANGCHAIN_TRACING_V2
+            LANGCHAIN_API_KEY=$LANGCHAIN_API_KEY
+            LANGCHAIN_ENDPOINT=$LANGCHAIN_ENDPOINT
+            LANGCHAIN_PROJECT=$LANGCHAIN_PROJECT
+            EOF
+          name: Create .env file containing secrets
   install-venv:
     steps:
       - run:
@@ -43,7 +56,7 @@ jobs:
       - install-venv
       - check-python  # Invoke command "check-python" after entering venv
       - run:
-          command: source ./venv/bin/activate && pytest -s
+          command: source ./venv/bin/activate && pytest -s  -k test_name
           name: Run nightly tests
   deploy:
     # For running on CircleCI's self-hosted runners
@@ -51,11 +64,15 @@ jobs:
     resource_class: user/sample-project # TODO add self-hosted runner resource class details
     steps:
       - checkout
+      - create-env
       - install-venv
       - check-python  # Invoke command "check-python" after entering venv
       - run:
-          command: source ./venv/bin/activate && flask --app rag/app run
-          name: Deploy application on self-hosted runner
+          command: ./tools/copy-env
+          name: Deploy application to /var directory on localhost
+      - run:
+          command: ./tools/start-server
+          name: Run Flask server
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/workflows/
@@ -71,16 +88,21 @@ workflows:
                 - rag-pipeline # Only run the job when this branch is updated
   deployment-tests:
     # Trigger on a schedule or when retrain branch is updated
-    triggers:
-      - schedule:
-          cron: "0 0 * * *" # Daily
+#    triggers:
+#      - schedule:
+#          cron: "0 0 * * *" # Daily
+#          filters:
+#            branches:
+#              only:
+#                - main
+    jobs:
+      - run-nightly-tests:
+          context: rag  # contains environment variables
+          # TODO: this below should go
           filters:
             branches:
               only:
                 - main
-    jobs:
-      - run-nightly-tests:
-          context: rag  # contains environment variables
       - hold: # A job that will require manual approval in the CircleCI web application.
           requires: 
             - run-nightly-tests
