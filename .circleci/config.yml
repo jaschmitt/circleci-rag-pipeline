@@ -68,7 +68,7 @@ jobs:
       - install-venv
       - check-python  # Invoke command "check-python" after entering venv
       - run:
-          command: sudo ./tools/copy-env
+          command: ./tools/copy-env
           name: Deploy application to /var directory on localhost
       - run:
           command: ./tools/start-server
