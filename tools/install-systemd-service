@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# This script sets up a Python virtual environment and installs the required packages for running the ML workflow scripts in the ml directory
+cp ./tools/rag_app.service  /etc/systemd/system/.
+
+# Reload daemon so that new service file can take effect
+systemctl daemon-reload
+
