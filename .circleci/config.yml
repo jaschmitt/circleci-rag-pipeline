@@ -56,7 +56,7 @@ jobs:
       - install-venv
       - check-python  # Invoke command "check-python" after entering venv
       - run:
-          command: source ./venv/bin/activate && pytest -s  -k test_name
+          command: source ./venv/bin/activate && pytest -s
           name: Run nightly tests
   deploy:
     # For running on CircleCI's self-hosted runners
@@ -67,6 +67,9 @@ jobs:
       - create-env
       - install-venv
       - check-python  # Invoke command "check-python" after entering venv
+      - run:
+          command: ./tools/install-systemd-service
+          name: Install systemd service
       - run:
           command: ./tools/copy-env
           name: Deploy application to /var directory on localhost and start server

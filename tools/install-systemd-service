@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # This script installs the systemd user service file
-mkdir -p /home/circleci/.config/systemd/user/
-cp ./tools/rag_app.service  /home/circleci/.config/systemd/user/
+mkdir -p ~/.config/systemd/user/
+cp ./tools/rag_app.service  ~/.config/systemd/user/
 
 # Reload daemon so that new service file can take effect
-systemctl daemon-reload
+systemctl --user daemon-reload
 
