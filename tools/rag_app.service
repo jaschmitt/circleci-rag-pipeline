@@ -1,0 +1,14 @@
+# Copy this to the /etc/systemd/system/ directory
+
+[Unit]
+Description=Rag App
+
+[Service]
+User=brandon
+WorkingDirectory=/home/brandon/Documents/projects/wizard-clients-circleci/circleci-rag-pipeline/
+ExecStart=/bin/bash -c "source /home/brandon/Documents/projects/wizard-clients-circleci/circleci-rag-pipeline/venv/bin/activate && flask --app rag/app run"
+
+
+[Install]
+WantedBy=multi-user.target
+

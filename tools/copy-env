@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Set the directory you want to copy to /var
+source_dir="$(pwd)"  # Current directory
+destination_dir="/var/rag_app"
+
+# Check if the destination directory exists and remove it
+if [ -d "$destination_dir" ]; then
+    rm -r "$destination_dir"
+fi
+
+# Recreate the destination directory
+mkdir -p "$destination_dir"
+
+# Copy the contents from the source directory to the destination directory
+cp -r "$source_dir"/* "$destination_dir"
+
+# Optional: Change the ownership and permissions if needed
+# chown -R owner:group "$destination_dir"
+# chmod -R 755 "$destination_dir"
+
+if [ -d "$destination_dir" ]; then
+    echo "Directory copied to /var successfully."
+else
+    echo "Failed to copy directory to /var"
+fi
+
