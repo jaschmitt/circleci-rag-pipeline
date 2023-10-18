@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Stop the service just in case it's already running
-sudo systemctl stop  rag_app
+#sudo systemctl stop  rag_app
 
 
 # Set the directory you want to copy to /var
@@ -27,7 +27,7 @@ cp "$source_dir"/.env "$destination_dir"/.
 if [ -d "$destination_dir" ]; then
     echo "Directory copied to /var successfully."
     # Then restart the service on success
-    sudo systemctl start  rag_app
+#    sudo systemctl start  rag_app
     echo "Starting rag_app.service..."
 else
     echo "Failed to copy directory to /var"
