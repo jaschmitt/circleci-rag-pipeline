@@ -79,19 +79,19 @@ workflows:
 #              only:
 #                - main
     jobs:
-#      - run-nightly-tests:
-#          context: rag-context  # contains environment variables
-#      - hold: # A job that will require manual approval in the CircleCI web application.
-#          requires: 
-#            - run-nightly-tests
-#          type: approval # This key-value pair will set your workflow to a status of "On Hold"
-      - deploy:
+      - run-nightly-tests:
           context: rag-context  # contains environment variables
           # TODO: this below should go
           filters:
             branches:
               only:
                 - main
-#          requires:
-#            - hold
+      - hold: # A job that will require manual approval in the CircleCI web application.
+          requires: 
+            - run-nightly-tests
+          type: approval # This key-value pair will set your workflow to a status of "On Hold"
+      - deploy:
+          context: rag-context  # contains environment variables
+          requires:
+            - hold
 
