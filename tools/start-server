@@ -1,3 +1,0 @@
-systemctl --user daemon-reload
-systemctl --user start rag_app
-systemctl --user status rag_app
