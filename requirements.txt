@@ -12,4 +12,3 @@ html2text
 tiktoken
 bs4
 Flask
-gunicorn
