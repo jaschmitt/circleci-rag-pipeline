@@ -22,8 +22,8 @@ commands:
 # See: https://circleci.com/docs/jobs-steps/
 jobs:
   run-unit-tests:
-    machine: # executor type
-      # for a full list of Linux VM execution environments, see
+    machine: # Executor type
+      # For a full list of Linux VM execution environments, see
       # https://circleci.com/developer/images?imageType=machine
       image: ubuntu-2204:2023.07.2
     steps:
@@ -34,8 +34,8 @@ jobs:
           command: source ./venv/bin/activate && pytest -s
           name: Test rag unit tests
   run-nightly-tests:
-    machine: # executor type
-      # for a full list of Linux VM execution environments, see
+    machine: # Executor type
+      # For a full list of Linux VM execution environments, see
       # https://circleci.com/developer/images?imageType=machine
       image: ubuntu-2204:2023.07.2
     steps:
@@ -64,34 +64,29 @@ workflows:
   integration-tests:
     jobs:
       - run-unit-tests:
-          context: rag-context  # contains environment variables (https://circleci.com/docs/contexts/)
+          context: rag-context  # This contains environment variables (https://circleci.com/docs/contexts/)
           filters:
             branches:
               only:
                 - rag-pipeline # Only run the job when this branch is updated
   deployment-tests:
     # Trigger on a schedule or when retrain branch is updated
-#    triggers:
-#      - schedule:
-#          cron: "0 0 * * *" # Daily
-#          filters:
-#            branches:
-#              only:
-#                - main
-    jobs:
-      - run-nightly-tests:
-          context: rag-context  # contains environment variables
-          # TODO: this below should go
+    triggers:
+      - schedule:
+          cron: "0 0 * * *" # Daily
           filters:
             branches:
               only:
                 - main
+    jobs:
+      - run-nightly-tests:
+          context: rag-context  # This contains environment variables
       - hold: # A job that will require manual approval in the CircleCI web application.
           requires: 
             - run-nightly-tests
           type: approval # This key-value pair will set your workflow to a status of "On Hold"
       - deploy:
-          context: rag-context  # contains environment variables
+          context: rag-context  # This contains environment variables
           requires:
             - hold
 
