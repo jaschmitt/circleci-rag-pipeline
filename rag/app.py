@@ -1,19 +1,21 @@
-# custom libs
+# Custom libs
 import chains
 
-# other libs
+# Other libs
 from   flask import Flask, jsonify, make_response, request
 import sys
 
 
 
-# initialize starter chain
+# Initialize the application chain
 chain = chains.assistant_chain("Bob").getChain()
 #chain = chains.documentation_chain("https://docs.smith.langchain.com").getChain()
 
 
 app = Flask(__name__)
 
+
+# Handle HTTP POST request
 @app.route("/", methods = ['POST'])
 def chat():
     if not request.is_json:

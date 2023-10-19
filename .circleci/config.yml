@@ -64,7 +64,7 @@ workflows:
   integration-tests:
     jobs:
       - run-unit-tests:
-          context: rag-context  # contains environment variables
+          context: rag-context  # contains environment variables (https://circleci.com/docs/contexts/)
           filters:
             branches:
               only:

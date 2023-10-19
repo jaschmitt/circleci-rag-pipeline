@@ -63,7 +63,7 @@ class documentation_chain:
         documents  = text_splitter.split_documents(transformed)
 
 
-        # Define vector store based on documents
+        # Define vector store based
         embeddings   = OpenAIEmbeddings()
         vectorstore  = Chroma.from_documents(documents, embeddings)
         retriever    = vectorstore.as_retriever(search_kwargs={"k": 4})
@@ -88,7 +88,8 @@ class documentation_chain:
         )
 
         self.chain = (
-            # The runnable map here routes the original inputs to a context and a question dictionary to pass to the response generator
+            # The runnable map here routes the original inputs to a context and
+            # a question dictionary to pass to the response generator.
             {
                 "context": itemgetter("question") | retriever | (lambda docs: "\n".join([doc.page_content for doc in docs])),
                 "question": itemgetter("question")

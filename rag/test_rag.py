@@ -2,17 +2,20 @@
 from langchain.smith import RunEvalConfig, run_on_dataset
 from langsmith       import Client
 
-# other libs
+# Other libs
 import pytest
 import uuid
 
-# custom libs
+# Custom libs
 import chains
 
 
 
 
 # =================== SETUP =================== #
+
+# In pytest, fixtures are reusable chunks of text that can be initialized
+# before different unit tests.
 
 @pytest.fixture
 def chain_1():
@@ -34,10 +37,11 @@ def chain_2():
 
 # =================== TESTS =================== #
 
-# This test uses the chain_1 fixture (which is just re-usable code that
-# executes before the test is run)
+# This test uses the chain_1 fixture
 def test_name(chain_1):
-    # instantiate LangSmith client
+    print("\n\n==== test: test_name ====")
+
+    # Instantiate LangSmith client
     client = Client()
 
     # Define input/output
@@ -49,10 +53,10 @@ def test_name(chain_1):
     assert "bob" in output_text.lower()
 
 
-# This test uses the chain_1 fixture (which is just re-usable code that
-# executes before the test is run)
 def test_basic_arithmetic(chain_1):
-    # instantiate LangSmith client
+    print("\n\n==== test: test_basic_arithmetic ====")
+
+    # Instantiate LangSmith client
     client = Client()
 
     # Define input/output
@@ -67,11 +71,13 @@ def test_basic_arithmetic(chain_1):
 # This test uses the chain_2 fixture (which is just re-usable code that
 # executes before the test is run)
 def test_llm_evaluators(chain_2):
-    # instantiate LangSmith client
+    print("\n\n==== test: test_llm_evaluators ====")
+
+    # Instantiate LangSmith client
     client = Client()
 
-
-    # define question and expected output example test set for qa evaluators in langsmith.
+    # Define test set with example questions and expected outputs for qa
+    # evaluators in LangSmith.
     examples = [
         ("what is langchain?", "langchain is an open-source framework for building applications using large language models. it is also the name of the company building langsmith."),
         ("how might i query for all runs in a project?", "client.list_runs(project_name='my-project-name'), or in typescript, client.listruns({projectname: 'my-project-anme'})"),
@@ -93,23 +99,22 @@ def test_llm_evaluators(chain_2):
     ]
 
 
-    # create a dataset for langsmith evaluator using the example qa list from above
+    # Create a dataset for the LangSmith evaluators using the example QA list
+    # from above
     dataset_name = f"retrieval qa questions {str(uuid.uuid4())}"
     dataset = client.create_dataset(dataset_name=dataset_name)
     for q, a in examples:
         client.create_example(inputs={"question": q}, outputs={"answer": a}, dataset_id=dataset.id)
 
 
-    # run qa evaluators
+    # Set up the QA Evaluators
     eval_config = RunEvalConfig(
         evaluators=["qa"],
-        # if you want to configure the eval llm:
-        # eval_llm=chatanthropic(model="claude-2", temperature=0)
     )
 
 
     # Run the evaluation. This makes predictions over the dataset and then uses
-    # the "QA" evaluator to check the correctness on each data point.
+    # the QA evaluators to check the correctness on each data point.
     _ = client.run_on_dataset(
         dataset_name=dataset_name,
         llm_or_chain_factory=lambda: chain_2,
