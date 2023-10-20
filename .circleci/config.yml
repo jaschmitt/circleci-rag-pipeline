@@ -60,7 +60,6 @@ jobs:
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/workflows/
 workflows:
-  # This workflow does a full build from scratch and deploys the model
   integration-tests:
     jobs:
       - run-unit-tests:
