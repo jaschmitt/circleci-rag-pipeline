@@ -72,15 +72,19 @@ workflows:
   deployment-tests:
     # Trigger on a schedule or when retrain branch is updated
     triggers:
-      - schedule:
-          cron: "0 0 * * *" # Daily
+#      - schedule:
+#          cron: "0 0 * * *" # Daily
+#          filters:
+#            branches:
+#              only:
+#                - main
+    jobs:
+      - run-nightly-tests:
+          context: rag-context  # This contains environment variables
           filters:
             branches:
               only:
                 - main
-    jobs:
-      - run-nightly-tests:
-          context: rag-context  # This contains environment variables
       - hold: # A job that will require manual approval in the CircleCI web application.
           requires: 
             - run-nightly-tests

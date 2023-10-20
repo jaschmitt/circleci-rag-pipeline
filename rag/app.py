@@ -8,8 +8,8 @@ import sys
 
 
 # Initialize the application chain
-#chain = chains.assistant_chain("Bob").getChain()
-chain = chains.documentation_chain("https://docs.smith.langchain.com").getChain()
+chain = chains.assistant_chain("Bob").getChain()
+#chain = chains.documentation_chain("https://docs.smith.langchain.com").getChain()
 
 
 app = Flask(__name__)
