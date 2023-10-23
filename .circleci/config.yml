@@ -48,7 +48,7 @@ jobs:
   deploy:
     # For running on CircleCI's self-hosted runners
     machine: true
-    resource_class: bwizard815/sample-project # TODO add self-hosted runner resource class details
+    resource_class: user/sample-project # TODO add self-hosted runner resource class details
     steps:
       - checkout
       - install-venv
